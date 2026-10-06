@@ -1,0 +1,5 @@
+# ClamVote
+
+server:
+  # Votifier protocol server port, default 8192
+  port: 8192

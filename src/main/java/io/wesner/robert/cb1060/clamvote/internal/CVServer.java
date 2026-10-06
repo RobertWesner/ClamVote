@@ -33,7 +33,9 @@ public final class CVServer {
     public CVServer start() {
         cancelled.set(false);
 
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(ClamVote.plugin, this::run);
+        if (
+            Bukkit.getScheduler().scheduleAsyncDelayedTask(ClamVote.plugin, this::run) == -1
+        ) throw new RuntimeException("Could not schedule server task.");
 
         return this;
     }
