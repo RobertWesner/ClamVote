@@ -1,0 +1,5 @@
+name: ClamVote
+main: io.wesner.robert.cb1060.clamvote.ClamVote
+version: ${version}
+description: >
+    A modern library plugin implementation of the Votifier V1 protocol for CB1060.
