@@ -8,7 +8,17 @@ Made with 🐚 for use in [BetaMC.org](https://betamc.org).
 
 ## Usage
 
-stay tuned
+Use Poseidon `@EventHandler` annotations:
+
+```java
+@EventHandler(ignoreCancelled = true)
+private void onVote(VoteEvent event) {
+    this.plugin.getLogger().info(
+        event.getUsername() + " voted on \""
+            + event.getService() + "\"!"
+    );
+}
+```
 
 ## License
 

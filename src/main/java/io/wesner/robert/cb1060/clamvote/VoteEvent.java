@@ -2,17 +2,25 @@ package io.wesner.robert.cb1060.clamvote;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.val;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.CraftOfflinePlayer;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @Getter
 @NullMarked
 public final class VoteEvent extends Event {
+    /**
+     * A devious curse from the depths of my sorcerers handbook.
+     */
+    @Nullable
+    private static Object poseidonV2CompatHandlerList = null;
+
     /**
      * Per-server-list identifier, unmapped arbitrary string.
      */
@@ -50,6 +58,19 @@ public final class VoteEvent extends Event {
         this.username = username;
         this.address = address;
         this.timestamp = timestamp;
+    }
+
+    public HandlerList getHandlers() {
+        return getHandlerList();
+    }
+
+    @SneakyThrows
+    public static HandlerList getHandlerList() {
+        if (poseidonV2CompatHandlerList == null) {
+            poseidonV2CompatHandlerList = Class.forName("org.bukkit.event.HandlerList").newInstance();
+        }
+
+        return (HandlerList) poseidonV2CompatHandlerList;
     }
 
     /**

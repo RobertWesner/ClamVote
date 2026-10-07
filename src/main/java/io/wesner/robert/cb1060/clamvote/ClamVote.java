@@ -5,6 +5,7 @@ import io.wesner.robert.cb1060.clamvote.internal.CVHandler;
 import io.wesner.robert.cb1060.clamvote.internal.CVKeys;
 import io.wesner.robert.cb1060.clamvote.internal.CVServer;
 import lombok.val;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -30,6 +31,8 @@ public class ClamVote extends JavaPlugin {
         plugin = null;
         server = null;
         handler = null;
+
+        Bukkit.getLogger().info("Stopped ClamVote server.");
     }
 
     @Override
@@ -42,5 +45,7 @@ public class ClamVote extends JavaPlugin {
         BlockingQueue<byte[]> requestChan = new LinkedBlockingQueue<>();
         server = new CVServer(config.port, requestChan).start();
         handler = new CVHandler(keys, requestChan).start();
+
+        Bukkit.getLogger().info("Started ClamVote server on port " + config.port + ".");
     }
 }

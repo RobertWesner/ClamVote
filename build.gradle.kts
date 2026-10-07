@@ -18,13 +18,28 @@ dependencies {
     compileOnly("org.jspecify:jspecify:1.0.0")
 }
 
+sourceSets {
+    create("compat") {
+        java.srcDir("src/compat/java")
+    }
+
+    main {
+        compileClasspath += sourceSets["compat"].output
+    }
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(8)
     }
 }
+
 tasks.processResources {
     filesMatching("plugin.yml") {
         expand(project.properties)
     }
+}
+
+tasks.named<JavaCompile>("compileJava") {
+    dependsOn(tasks.named("compileCompatJava"))
 }

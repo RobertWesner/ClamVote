@@ -23,20 +23,22 @@ public class CVConfig {
         if (!dataFolder.exists() && !dataFolder.mkdirs()) throw new IOException("Failed to create plugin directory.");
 
         val configFile = new File(dataFolder, "config.yml");
-        try (
-            val in = ClamVote.class.getResourceAsStream("/config.yml");
-            val out = new FileOutputStream(configFile)
-        ) {
-            byte[] buffer = new byte[8192];
-            int read;
+        if (!configFile.exists()) {
+            try (
+                val in = ClamVote.class.getResourceAsStream("/config.yml");
+                val out = new FileOutputStream(configFile)
+            ) {
+                byte[] buffer = new byte[8192];
+                int read;
 
-            while (true) {
-                assert in != null;
-                if ((read = in.read(buffer)) == -1) break;
-                out.write(buffer, 0, read);
+                while (true) {
+                    assert in != null;
+                    if ((read = in.read(buffer)) == -1) break;
+                    out.write(buffer, 0, read);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
 
         val config = ClamVote.plugin.getConfiguration();
