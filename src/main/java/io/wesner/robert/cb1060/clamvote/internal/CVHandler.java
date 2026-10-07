@@ -1,12 +1,15 @@
 package io.wesner.robert.cb1060.clamvote.internal;
 
 import io.wesner.robert.cb1060.clamvote.ClamVote;
+import io.wesner.robert.cb1060.clamvote.VoteEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.bukkit.Bukkit;
 import org.jspecify.annotations.NullMarked;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -45,10 +48,34 @@ public final class CVHandler {
 
     private void handle(byte[] packet) {
         try {
-            System.out.println(new String(keys.decrypt(packet))); // TODO: parsing is easy enough, but my brain is spent
+            val parts = new String(keys.decrypt(packet), StandardCharsets.UTF_8)
+                .split("\n", 6); // spec explicitly says LF, no CR, no CRLF
+
+            if (parts.length < 5) {
+                Bukkit.getLogger().warning("Invalid Votifier packet detected, expected 5 parts, got " + parts.length + ".");
+
+                return;
+            }
+
+            if (!parts[0].equals("VOTE")) {
+                Bukkit.getLogger().warning("Invalid Votifier packet detected, expected \"VOTE\" segment, got " + parts[0] + ".");
+
+                return;
+            }
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(
+                ClamVote.plugin,
+                () -> Bukkit.getPluginManager().callEvent(
+                    new VoteEvent(
+                        parts[1],
+                        parts[2],
+                        parts[3],
+                        parts[4]
+                    )
+                )
+            );
         } catch (IOException exception) {
-            // TODO
-            exception.printStackTrace();
+            Bukkit.getLogger().warning("Invalid Votifier packet detected, could not decrypt, error: " + exception.getMessage());
         }
     }
 }

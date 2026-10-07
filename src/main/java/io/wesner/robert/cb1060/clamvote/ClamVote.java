@@ -12,8 +12,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-// TODO: implement Bukkit events, probably going to ditch the original handler stuff that came in normal votifier, this is not intended as drop-in compat replacement
-
 @NullMarked
 public class ClamVote extends JavaPlugin {
     @Nullable
